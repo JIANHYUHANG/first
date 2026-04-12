@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <!-- 适配手机屏幕 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💌 致我最爱的小彤 💌</title>
+    <style>
+        /* 全局样式重置 + 基础设置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "微软雅黑", "苹方", sans-serif;
+        }
+
+        /* 浪漫渐变背景 */
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* 主容器 */
+        .container {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(255, 105, 180, 0.3);
+            max-width: 600px;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            animation: fadeIn 1.5s ease;
+        }
+
+        /* 标题样式 */
+        .title {
+            font-size: 36px;
+            color: #ff5e8f;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        /* 副标题 */
+        .subtitle {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        /* 告白文字 */
+        .love-text {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.8;
+            margin: 20px 0;
+            text-align: left;
+            min-height: 100px;
+        }
+
+        /* 互动按钮 */
+        .btn {
+            background: #ff5e8f;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 20px 0;
+        }
+
+        .btn:hover {
+            background: #ff3a7a;
+            transform: scale(1.05);
+        }
+
+        /* 隐藏的彩蛋情话 */
+        .secret {
+            display: none;
+            color: #ff5e8f;
+            font-weight: bold;
+            font-size: 18px;
+            margin-top: 20px;
+            animation: fadeIn 0.8s ease;
+        }
+
+        /* 署名 */
+        .signature {
+            margin-top: 30px;
+            text-align: right;
+            color: #999;
+            font-size: 14px;
+        }
+
+        /* 淡入动画 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 漂浮爱心样式 */
+        .heart {
+            position: fixed;
+            z-index: 1;
+            pointer-events: none;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* 爱心漂浮动画 */
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-800px) rotate(720deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <!-- 主内容区 -->
+    <div class="container">
+        <h1 class="title">💖 我最亲爱的韩雨彤 💖</h1>
+        <p class="subtitle">遇见你，是我这辈子最幸运的事</p>
+        
+        <div class="love-text" id="text"></div>
+        
+        <button class="btn" id="loveBtn">公主请点这里 ❤️</button>
+        <div class="secret" id="secretText">
+            往后余生，三餐四季，岁岁年年，<br>
+            只想和你一起，永远爱你！
+        </div>
+
+        <div class="signature">
+            永远爱你的姜宇航 ❤️<br>
+            2026年4月12日
+        </div>
+    </div>
+
+    <script>
+        // 1. 逐字显示告白文字
+        const loveWords = `从遇见你的那一刻起，
+我的世界便有了不一样的色彩。
+你的笑容，你的温柔，你的一切，
+都让我心动不已。
+
+我喜欢和你一起的每一个瞬间，
+喜欢听你说话，喜欢陪你做任何事，
+喜欢有你的全世界。
+
+我想把所有的温柔和偏爱都给你，
+想牵着你的手，走过春夏秋冬，
+想陪你从青丝到白发，从心动到古稀。`;
+
+        const textDom = document.getElementById('text');
+        let index = 0;
+
+        // 逐字打印效果
+        function typeWriter() {
+            if (index < loveWords.length) {
+                textDom.innerHTML += loveWords.charAt(index);
+                index++;
+                setTimeout(typeWriter, 50);
+            }
+        }
+        // 页面加载完成后启动
+        window.onload = typeWriter;
+
+        // 2. 点击按钮显示彩蛋
+        const btn = document.getElementById('loveBtn');
+        const secret = document.getElementById('secretText');
+        btn.addEventListener('click', () => {
+            secret.style.display = 'block';
+            btn.innerText = '爱意已送达 💌';
+            btn.disabled = true;
+        });
+
+        // 3. 动态生成漂浮爱心
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.innerHTML = '❤️';
+            heart.className = 'heart';
+            // 随机大小
+            const size = Math.random() * 20 + 10;
+            heart.style.fontSize = `${size}px`;
+            // 随机位置
+            heart.style.left = `${Math.random() * 100}vw`;
+            // 随机动画时长
+            heart.style.animationDuration = `${Math.random() * 3 + 2}s`;
+            
+            document.body.appendChild(heart);
+            
+            // 动画结束后删除爱心
+            setTimeout(() => {
+                heart.remove();
+            }, 5000);
+        }
+
+        // 每300ms生成一个爱心
+        setInterval(createHeart, 300);
+    </script>
+</body>
+</html>
