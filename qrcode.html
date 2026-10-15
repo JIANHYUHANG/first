@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>网页二维码 · 马克思主义基本原理</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: radial-gradient(ellipse at center, #1a0505 0%, #0a0a0f 70%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    color: #f5f0e8;
+  }
+  .card {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(212, 175, 55, 0.25);
+    border-radius: 20px;
+    padding: 40px 36px;
+    max-width: 460px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    backdrop-filter: blur(10px);
+  }
+  .emblem {
+    font-size: 42px;
+    color: #c8102e;
+    text-shadow: 0 0 20px rgba(200,16,46,0.5);
+    margin-bottom: 12px;
+  }
+  h1 {
+    font-size: 22px;
+    margin-bottom: 6px;
+    color: #f0d878;
+    letter-spacing: 2px;
+  }
+  .subtitle {
+    font-size: 13px;
+    color: #b0a896;
+    margin-bottom: 28px;
+    letter-spacing: 1px;
+  }
+  .qr-box {
+    background: #fff;
+    padding: 18px;
+    border-radius: 14px;
+    display: inline-block;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+  }
+  #qrcode img, #qrcode canvas { display: block; }
+  .url-display {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(212,175,55,0.2);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: #d4af37;
+    word-break: break-all;
+    margin-bottom: 14px;
+    font-family: Consolas, monospace;
+  }
+  .btn-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 22px;
+  }
+  .btn {
+    flex: 1;
+    padding: 11px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.25s ease;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, #c8102e, #8b0000);
+    color: #fff;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(200,16,46,0.4); }
+  .btn-outline {
+    background: transparent;
+    color: #d4af37;
+    border: 1px solid #d4af37;
+  }
+  .btn-outline:hover { background: #d4af37; color: #0a0a0f; }
+  .custom-section {
+    text-align: left;
+    border-top: 1px solid rgba(212,175,55,0.15);
+    padding-top: 18px;
+  }
+  .custom-section label {
+    display: block;
+    font-size: 13px;
+    color: #b0a896;
+    margin-bottom: 8px;
+  }
+  .input-row {
+    display: flex;
+    gap: 8px;
+  }
+  .input-row input {
+    flex: 1;
+    padding: 10px 12px;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(212,175,55,0.25);
+    border-radius: 8px;
+    color: #f5f0e8;
+    font-size: 13px;
+    outline: none;
+  }
+  .input-row input:focus { border-color: #d4af37; }
+  .input-row button {
+    padding: 10px 16px;
+    background: #d4af37;
+    color: #0a0a0f;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+  .tip {
+    margin-top: 18px;
+    font-size: 12px;
+    color: #7a7260;
+    line-height: 1.7;
+  }
+  .tip b { color: #d4af37; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="emblem">☭</div>
+    <h1>马克思主义基本原理</h1>
+    <p class="subtitle">扫描二维码访问网页</p>
+
+    <div class="qr-box">
+      <div id="qrcode"></div>
+    </div>
+
+    <div class="url-display" id="urlDisplay">正在生成...</div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary" id="copyBtn">复制链接</button>
+      <button class="btn btn-outline" id="downloadBtn">下载二维码</button>
+    </div>
+
+    <div class="custom-section">
+      <label>自定义访问地址（部署到公网后粘贴新地址，重新生成二维码）：</label>
+      <div class="input-row">
+        <input type="text" id="urlInput" placeholder="例如 https://your-domain.com">
+        <button id="genBtn">生成</button>
+      </div>
+    </div>
+
+    <div class="tip">
+      <b>使用说明：</b><br>
+      1. 当前二维码指向本机局域网地址，手机与电脑需连接<b>同一WiFi</b>即可扫码访问。<br>
+      2. 若需<b>随时随地</b>访问，请将网页部署到公网（如 GitHub Pages、Netlify、Cloudflare Pages），获取公网网址后粘贴到上方输入框重新生成二维码。
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+  <script>
+    // 默认局域网访问地址
+    const DEFAULT_URL = "http://172.23.84.242:8080/";
+    let currentUrl = DEFAULT_URL;
+    let qrcode = null;
+
+    function generateQR(url) {
+      const container = document.getElementById("qrcode");
+      container.innerHTML = "";
+      qrcode = new QRCode(container, {
+        text: url,
+        width: 240,
+        height: 240,
+        colorDark: "#8b0000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H
+      });
+      currentUrl = url;
+      document.getElementById("urlDisplay").textContent = url;
+      document.getElementById("urlInput").value = url;
+    }
+
+    generateQR(DEFAULT_URL);
+
+    document.getElementById("copyBtn").addEventListener("click", function () {
+      const btn = this;
+      navigator.clipboard.writeText(currentUrl).then(function () {
+        btn.textContent = "已复制 ✓";
+        setTimeout(function () { btn.textContent = "复制链接"; }, 1500);
+      }).catch(function () {
+        // 降级方案
+        const ta = document.createElement("textarea");
+        ta.value = currentUrl;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+        btn.textContent = "已复制 ✓";
+        setTimeout(function () { btn.textContent = "复制链接"; }, 1500);
+      });
+    });
+
+    document.getElementById("downloadBtn").addEventListener("click", function () {
+      const canvas = document.querySelector("#qrcode canvas");
+      const img = document.querySelector("#qrcode img");
+      let dataUrl;
+      if (canvas) {
+        dataUrl = canvas.toDataURL("image/png");
+      } else if (img) {
+        dataUrl = img.src;
+      } else {
+        return;
+      }
+      const a = document.createElement("a");
+      a.href = dataUrl;
+      a.download = "marxism-qrcode.png";
+      a.click();
+    });
+
+    document.getElementById("genBtn").addEventListener("click", function () {
+      const url = document.getElementById("urlInput").value.trim();
+      if (url) {
+        generateQR(url);
+      }
+    });
+
+    document.getElementById("urlInput").addEventListener("keydown", function (e) {
+      if (e.key === "Enter") {
+        document.getElementById("genBtn").click();
+      }
+    });
+  </script>
+</body>
+</html>
